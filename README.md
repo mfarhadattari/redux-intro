@@ -166,3 +166,39 @@ const ReduxCounter = () => {
 
 export default ReduxCounter;
 ```
+
+## Middleware
+
+### Create Middleware
+
+```javascript
+const customLogger = (store) => (next) => (action) => {
+  const previousState = store.getState();
+  console.log("previousState :", previousState);
+  console.log("actions :", action);
+  next(action);
+  const newState = store.getState();
+  console.log("newState :", newState);
+};
+
+export default customLogger;
+```
+
+### Use Middleware
+
+```javaScript
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "./features/counter/counterSlice";
+import customLogger from "./middlewares/customLogger";
+
+const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(customLogger),
+});
+
+export default store;
+
+```
